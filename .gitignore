@@ -9,5 +9,5 @@ rel/example_project
 .concrete/DEV_MODE
 .rebar
 __pycache__
-_build
-.idea
+_build/
+.idea/
