@@ -1,4 +1,4 @@
-from decorators import decorate_erl_string_args
+from python_modules.decorators import decorate_erl_string_args
 
 
 @decorate_erl_string_args

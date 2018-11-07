@@ -99,7 +99,7 @@ start_tasks(M, F, [H|T]) ->
       timer:sleep(2000),
       try
         python:call(P, M, F, [X])
-        catch error:{python, Class, Argument, StackTrace} ->
+        catch error:{python, Class, Argument, _} ->
 %%          io:format(" ~p~n", [StackTrace]),
           io:format(" ~p~n",[Argument]),
           io:format(" ~p~n", [Class]),

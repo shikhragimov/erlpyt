@@ -36,8 +36,8 @@
     {
     test3, {
       19000,
-      another_test_module,
-      test_function_,
+      'python_modules.another_test_module',
+      test_function,
       ["1", "2"]
     }
   }] :: Task::list(erlpyt_types:tuple())
