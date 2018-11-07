@@ -1,8 +1,8 @@
 [{<<"erlport">>,
-  {git,"git://github.com/hdima/erlport.git",
-       {ref,"246b7722d62b87b48be66d9a871509a537728962"}},
+  {git,"git://github.com/shikhragimov/erlport.git",
+       {ref,"a8637c2805ab90562feebd8b515c455862926076"}},
   0},
  {<<"sync">>,
   {git,"git://github.com/rustyio/sync.git",
-       {ref,"44a1e0d0c3eab0544010bc973ee46b1f6d602ccf"}},
+       {ref,"9b207f7396e8c037c66db1b3ca8f7b0338586397"}},
   0}].
