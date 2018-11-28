@@ -40,15 +40,14 @@ start_link(Name, TaskName) ->
 
 %% @doc initialize server with Timer for periodic task
 init([TaskName]) ->
-  %% get task by TaskName
-  TasksRec = #task{},
-  {_, Tasks} = TasksRec,
-  {_, M, F, A} = proplists:get_value(TaskName, Tasks),
-  %%  start first task after 1 second
+  %%  start first task (only first) after 1 second
   io:format("erlpyt_task_server: starting preiodic tasks~n"),
-
-  Timer = erlang:send_after(1000, self(), {start_tasks, TaskName, [M, F, A]}),
-  {ok, {Timer}}.
+  TasksRec = #task{},
+  {Period, M, F, A} = proplists:get_value(TaskName, TasksRec#task.tasks),
+  StartTime = erlang:monotonic_time(millisecond),
+  self() ! {start_tasks, TaskName, [M, F, A]},
+  ok = start_tasks(M, F, A),
+  {ok, {StartTime, Period}}.
 
 %% @doc not used now
 handle_cast({parse, []}, {Timer}) ->
@@ -61,18 +60,21 @@ handle_call({create, []}, _, {Timer}) ->
   {reply, ok, {Timer}}.
 
 %% @doc here we catch messages to start periodical tasks
-handle_info({start_tasks, TaskName, [OldM, OldF, OldA]}, {Timer}) ->
-  %% end timer
-  erlang:cancel_timer(Timer),
-  %% get tasks
+handle_info({start_tasks, TaskName, [OldM, OldF, OldA]}, {OldStartTime, OldPeriod}) ->
   TasksRec = #task{},
-  {Time, M, F, A} = proplists:get_value(TaskName, TasksRec#task.tasks),
-  %% reload timer
-  NewTimer = erlang:send_after(Time, self(), {start_tasks, TaskName, [M, F, A]}),
+  {NewPeriod, M, F, A} = proplists:get_value(TaskName, TasksRec#task.tasks),
+
+  NewStartTime = get_timer(NewPeriod, OldPeriod, OldStartTime),
+  NextCall = NewPeriod - (erlang:monotonic_time(millisecond)-NewStartTime) rem NewPeriod,
+  erlang:display(NextCall),
+  erlang:display(NextCall),
+  _NewTimer = erlang:send_after(NextCall, self(), {start_tasks, TaskName, [M, F, A]}),
+
   io:format("erlpyt_task_server: start periodical tasks for {~p} ~n", [TaskName]),
   ok = start_tasks(OldM, OldF, OldA),
   io:format("erlpyt_task_server: task restarting for {~p} done~n", [TaskName]),
-  {noreply, {NewTimer}};
+  {noreply, {NewStartTime, NewPeriod}};
+
 
 %% @doc handle unknown message
 handle_info(Msg, State) ->
@@ -110,3 +112,10 @@ start_tasks(M, F, [H|T]) ->
   start_tasks(M, F, T);
 start_tasks(_, _, []) ->
   ok.
+
+
+%% @doc function to get new StartTime if Period of tasks was changed
+get_timer(Period, Period, OldStartTime) ->
+  OldStartTime;
+get_timer(_OldPeriod, _NewPeriod, _) ->
+  erlang:monotonic_time(millisecond).
