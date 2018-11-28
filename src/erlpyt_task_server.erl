@@ -45,7 +45,7 @@ init([TaskName]) ->
   {_, Tasks} = TasksRec,
   {_, M, F, A} = proplists:get_value(TaskName, Tasks),
   %%  start first task after 1 second
-  io:format("erlpyt_task_server: asdasfasfasfasf~n"),
+  io:format("erlpyt_task_server: starting preiodic tasks~n"),
 
   Timer = erlang:send_after(1000, self(), {start_tasks, TaskName, [M, F, A]}),
   {ok, {Timer}}.
