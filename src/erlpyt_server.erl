@@ -2,7 +2,7 @@
 %%% @author m.shikhragimov@gmail.com
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
-%%% This server looks at configs at add/remove task servers task added/deleted
+%%% This server looks at configs and adds/removes tasks by starting servers or stopping servers
 %%% @end
 %%% Created : 29. Aug 2018 12:15
 %%%-------------------------------------------------------------------
