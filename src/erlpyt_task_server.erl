@@ -3,7 +3,6 @@
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
 %%% The only function of this server is to manage periodic tasks.
-%%% Every 15 minutes it calls functions to parse items
 %%% @end
 %%% Created : 30. Aug 2018 15:25
 %%%-------------------------------------------------------------------
